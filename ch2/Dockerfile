@@ -6,6 +6,9 @@ RUN apt-get update
 
 RUN apt-get install -y wget
 RUN apt-get install gnupg -y
+RUN apt-get install tzdata -y
+ENV TZ="America/New_York"
+RUN apt-get install -y google-perftools
 
 RUN wget -O -  https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
 RUN apt-get install libgoogle-perftools-dev -y
@@ -66,8 +69,6 @@ RUN update-alternatives \
   --slave   /usr/bin/lldb                  lldb                   /usr/bin/lldb-11 \
   --slave   /usr/bin/lldb-server           lldb-server            /usr/bin/lldb-server-11
 
-COPY 01_substring_sort_a.c .
-COPY 01.h .
-COPY 01_substring_sort.c .
+COPY main.c compare.c compare.h .
+COPY *.sh .
 
-RUN clang++-11 -g -mavx2 -Wall -pedantic 01_substring_sort.c 01_substring_sort_a.c -lprofiler -o a.out
